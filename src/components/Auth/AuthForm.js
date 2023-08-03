@@ -50,16 +50,18 @@ const AuthForm = () => {
     const enteredEmail = emailInputRef.current.value;
     const enteredPassword = passwordInputRef.current.value;
     setloading(true)
-
-    console.log(enteredEmail,enteredPassword)
-
-    // optional: Add validation
+  let url;
 
     if (isLogin) {
+     url='https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCjf_6OaBAYfGFkAEhAsm9ieCsnYoow8Ng';
+
     } else {
-      fetch(
-        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCjf_6OaBAYfGFkAEhAsm9ieCsnYoow8Ng',
-        {
+      
+        url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCjf_6OaBAYfGFkAEhAsm9ieCsnYoow8Ng';
+      }
+        fetch(
+          url,
+          {
           method: 'POST',
           body: JSON.stringify({
             email: enteredEmail,
@@ -74,18 +76,24 @@ const AuthForm = () => {
         setloading(false)
 
         if (res.ok) {
-          // ...
+          return res.json();
         } else {
           return res.json().then((data) => {
             let errormessage='Email Exists';
             if(data && data.error && data.error.message){
               errormessage=data.error.message;
             }
-            alert(errormessage)
+            throw new Error(errormessage)
           });
         }
-      });
-    }
+      }).then((data)=>{
+        console.log(data)
+      })
+      .catch((err)=>{
+        alert(err.message)
+
+      })
+    
   };
   return (
     <section className={classes.auth}>
