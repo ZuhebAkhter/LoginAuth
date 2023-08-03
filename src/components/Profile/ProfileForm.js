@@ -1,10 +1,10 @@
-
+import { useNavigate } from 'react-router-dom';
 import { useRef,useContext } from 'react';
 import classes from './ProfileForm.module.css';
 import AuthContext from '../../store/AuthContext';
 
 const ProfileForm = () => {
-
+   const navigate=useNavigate();
   const newpasswordInputref=useRef();
   const contextCtx=useContext(AuthContext)
 
@@ -22,6 +22,8 @@ const ProfileForm = () => {
       headers:{
         'Content-Type':'application/json'
       }
+    }).then((res)=>{
+      navigate('/')
     })
   }
   return (
